@@ -3,15 +3,13 @@
 #include "geometry.h"
 #include <iostream>
 
-const TGAColor white = TGAColor(255, 255, 255, 255);
-const TGAColor   red = TGAColor(255, 0,   0,   255);
-const TGAColor green = TGAColor(0,   255, 0,   255);
-const TGAColor  blue = TGAColor(0,   0,   255, 255);
+#include "lesson1.h"
+#include "colors.h"
+
 Model *model = NULL;
 const int width  = 800;
 const int height = 800;
 
-void line(int x0, int y0, int x1, int y1, TGAImage &image, const TGAColor &color);
 void triangle(Vec2i p1, Vec2i p2, Vec2i p3, TGAImage &image, const TGAColor &color);
 void filledTriangle(Vec2i p1, Vec2i p2, Vec2i p3, TGAImage &image, const TGAColor &color);
 
@@ -24,18 +22,7 @@ int main(int argc, char const *argv[]) {
 	}
 	// for (int i = 0; i < 1000000; ++i)
 	// 	line(0, 0, 11,  100, image, red);
-	// for (int i=0; i<model->nfaces(); i++) {
-	// 	std::vector<int> face = model->face(i);
-		// 	for (int j=0; j<3; j++) {
-	// 		Vec3f v0 = model->vert(face[j]);
-	// 		Vec3f v1 = model->vert(face[(j+1)%3]);
-	// 		int x0 = (v0.x+1.)*width/2.;
-	// 		int y0 = (v0.y+1.)*height/2.;
-	// 		int x1 = (v1.x+1.)*width/2.;
-	// 		int y1 = (v1.y+1.)*height/2.;
-	// 		line(x0, y0, x1, y1, image, white);
-	// 	}
-	// }
+	draw_wireframe(model, image);
 
 	Vec2i t0[3] = {Vec2i(100, 100),   Vec2i(0, 0),  Vec2i(0, 100)};
 	Vec2i t1[3] = {Vec2i(180, 50),  Vec2i(150, 1),   Vec2i(70, 180)};
@@ -79,27 +66,6 @@ int main(int argc, char const *argv[]) {
 	image.flip_vertically(); // Origin is at left-bottom
 	image.write_tga_file("output.tga");
 	return 0;
-}
-
-int sign(int x) {
-	return (x<0) ? -1 : 1;
-}
-
-void line(int x0, int y0, int x1, int y1, TGAImage &image, const TGAColor &color) {
-	int dx = x1-x0;
-	int dy = y1-y0;
-	if (dx == 0 && dy == 0)
-		image.set(x0, y0, color);
-	if (std::abs(dx) >= std::abs(dy)) {
-		float diff = std::abs(1.0f*dy/dx);
-		for (int i = 0; i <= std::abs(dx); ++i)
-			image.set(x0+sign(dx)*i, y0+std::floor(sign(dy)*i*diff), color);
-	}
-	else {
-		float diff = std::abs(1.0f*dx/dy);
-		for (int i = 0; i <= std::abs(dy); ++i)
-			image.set(x0+std::floor(sign(dx)*i*diff), y0+sign(dy)*i, color);
-	}
 }
 
 void triangle(Vec2i p1, Vec2i p2, Vec2i p3, TGAImage &image, const TGAColor &color) {
