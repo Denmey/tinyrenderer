@@ -2,6 +2,7 @@
 
 #include "lesson1.h"
 #include "utility.h"
+#include "colors.h"
 
 void line(int x0, int y0, int x1, int y1, TGAImage &image, const TGAColor &color) {
 	int dx = x1-x0;
